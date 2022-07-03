@@ -3,7 +3,7 @@
     "description": "A Node-RED Project",
     "version": "0.0.1",
     "scripts": {
-        "debug_up": "env-cmd -f ./config/express_dev.env --use-shell \"docker-compose -f ./docker-compose.dev.yml up -d && nodemon index.js\"",
+        "debug_up": "env-cmd -f ./config/express_dev.env --use-shell \"docker-compose -f config/docker-compose.dev.yml up -d && nodemon index.js\"",
         "debug_down": "docker-compose -f ./docker-compose.dev.yml down",
         "prod_express": "env-cmd -f ./"
     },
