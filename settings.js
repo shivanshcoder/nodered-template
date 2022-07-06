@@ -53,7 +53,7 @@ module.exports = {
      * the user's home directory. To use a different location, the following
      * property can be used
      */
-    //userDir: '/home/nol/.node-red/',
+    userDir: './',
 
     /** Node-RED scans the `nodes` directory in the userDir to find local node files.
      * The following property can be used to specify an additional directory to scan.
@@ -164,7 +164,7 @@ module.exports = {
      * The following property can be used to specify a different root path.
      * If set to false, this is disabled.
      */
-    //httpAdminRoot: '/admin',
+    httpAdminRoot: '/admin',
 
     /** The following property can be used to add a custom middleware function
      * in front of all admin http routes. For example, to set custom http
@@ -183,7 +183,7 @@ module.exports = {
      * can be used to specifiy a different root path. If set to false, this is
      * disabled.
      */
-    //httpNodeRoot: '/red-nodes',
+    httpNodeRoot: '/api',
 
     /** The following property can be used to configure cross-origin resource sharing
      * in the HTTP nodes.

@@ -2,6 +2,8 @@ var http = require('http');
 var express = require("express");
 var RED = require("node-red");
 
+// Fetching Nodered settings from file now
+var settings = require('./settings')
 
 // Create an Express app
 var app = express();
@@ -12,10 +14,7 @@ app.use("/",express.static("public"));
 
 app.get('/hi', (req, res) => {
     
-    res.send('hello world');
-    res.send("HIII")
-    res.send("HIII")
-    res.send('hello world');
+    res.send('hi');
 })
 
 
@@ -23,16 +22,15 @@ app.get('/hi', (req, res) => {
 var server = http.createServer(app);
 
 // Create the settings object - see default settings.js file for other options
-var settings = {
-    httpAdminRoot:"/red",
-    httpNodeRoot: "/api",
-    userDir:"./",
-    flowFile:"flows.json",
-    credentialSecret: "nskjdvfhbkjshdfvhbsdfvlauetowiryeughdf",
-    functionGlobalContext: {}    // enables global context
-};
+// var settings = {
+//     httpAdminRoot:"/red",
+//     httpNodeRoot: "/api",
+//     userDir:"./",
+//     flowFile:"flows.json",
+//     credentialSecret: "nskjdvfhbkjshdfvhbsdfvlauetowiryeughdf",
+//     functionGlobalContext: {}    // enables global context
+// };
 
-app.get('/api/storeData')
 
 
 // Initialise the runtime with a server and settings
