@@ -2,10 +2,17 @@
     {
         "id": "e34226b2e39fb0a2",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "Examples",
         "disabled": false,
         "info": "",
         "env": []
+    },
+    {
+        "id": "7e22036e.f80bdc",
+        "type": "tab",
+        "label": "tests",
+        "disabled": false,
+        "info": ""
     },
     {
         "id": "37e7ceb6f79f5241",
@@ -50,8 +57,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 340,
-        "y": 140,
+        "x": 120,
+        "y": 60,
         "wires": [
             [
                 "b98023de175dd29d"
@@ -70,8 +77,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 530,
-        "y": 200,
+        "x": 750,
+        "y": 60,
         "wires": []
     },
     {
@@ -90,8 +97,8 @@
         "attributes": 0,
         "connectionType": "Producer",
         "convertFromJson": false,
-        "x": 540,
-        "y": 140,
+        "x": 320,
+        "y": 60,
         "wires": []
     },
     {
@@ -119,11 +126,201 @@
         "keyEncoding": "utf8",
         "connectionType": "Consumer",
         "convertToJson": false,
-        "x": 320,
-        "y": 200,
+        "x": 540,
+        "y": 60,
         "wires": [
             [
                 "1437ae6d78da08eb"
+            ]
+        ]
+    },
+    {
+        "id": "233d2867330e6cc4",
+        "type": "Kafka Admin",
+        "z": "e34226b2e39fb0a2",
+        "name": "",
+        "broker": "37e7ceb6f79f5241",
+        "x": 390,
+        "y": 300,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "31c34a4.2603ab6",
+        "type": "Kafka Admin",
+        "z": "7e22036e.f80bdc",
+        "name": "Kafka Admin",
+        "broker": "37e7ceb6f79f5241",
+        "x": 450,
+        "y": 380,
+        "wires": [
+            [
+                "e63719e6.4207f8"
+            ],
+            [
+                "848b84fd.3738d8"
+            ]
+        ]
+    },
+    {
+        "id": "e63719e6.4207f8",
+        "type": "debug",
+        "z": "7e22036e.f80bdc",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 670,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "9557d6e1.63ba38",
+        "type": "inject",
+        "z": "7e22036e.f80bdc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "topic",
+                "v": "listTopics",
+                "vt": "string"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "listTopics",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 340,
+        "wires": [
+            [
+                "31c34a4.2603ab6"
+            ]
+        ]
+    },
+    {
+        "id": "6907be35.65898",
+        "type": "inject",
+        "z": "7e22036e.f80bdc",
+        "name": "",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "listGroups",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 300,
+        "wires": [
+            [
+                "31c34a4.2603ab6"
+            ]
+        ]
+    },
+    {
+        "id": "848b84fd.3738d8",
+        "type": "debug",
+        "z": "7e22036e.f80bdc",
+        "name": "error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 670,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "54bc5863.08ea98",
+        "type": "inject",
+        "z": "7e22036e.f80bdc",
+        "name": "describeGroups",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "describeGroups",
+        "payload": "[\"aGroup\"]",
+        "payloadType": "json",
+        "x": 140,
+        "y": 380,
+        "wires": [
+            [
+                "31c34a4.2603ab6"
+            ]
+        ]
+    },
+    {
+        "id": "2056242a.f330ac",
+        "type": "inject",
+        "z": "7e22036e.f80bdc",
+        "name": "createTopics",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "createTopics",
+        "payload": "[{\"topic\":\"aTestRemoveTopic\",\"partitions\":1,\"replicationFactor\":1},{\"topic\":\"test\",\"partitions\":1,\"replicationFactor\":1},{\"topic\":\"atest\",\"partitions\":1,\"replicationFactor\":1},{\"topic\":\"testCommit\",\"partitions\":1,\"replicationFactor\":1},{\"topic\":\"testRollback\",\"partitions\":1,\"replicationFactor\":1}]",
+        "payloadType": "json",
+        "x": 130,
+        "y": 420,
+        "wires": [
+            [
+                "31c34a4.2603ab6"
+            ]
+        ]
+    },
+    {
+        "id": "8bcb5ffe.b6683",
+        "type": "inject",
+        "z": "7e22036e.f80bdc",
+        "name": "deleteTopics",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "deleteTopics",
+        "payload": "[{\"topic\":\"aTestRemoveTopic\"},{\"topic\":\"aTestRemoveTopic2\"}]",
+        "payloadType": "json",
+        "x": 130,
+        "y": 460,
+        "wires": [
+            [
+                "31c34a4.2603ab6"
             ]
         ]
     }

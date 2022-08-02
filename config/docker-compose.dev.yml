@@ -2,18 +2,42 @@ version: "3.9"
 
 services:
 
+  # node-red-dev:
+  #   image: nodered/node-red
+    
+  #   hostname: node-red-dev
+  #   env_file:
+  #     - ../config/prod.env
+  #   ports:
+  #     - "1890:1880"
+  #   entrypoint: >
+  #     sh -c "
+  #     npm install --prefix /data --unsafe-perm --no-update-notifier --no-fund --only=production
+  #     && npm --no-update-notifier --no-fund start --cache /data/.npm -- --userDir /data"
+  #   environment:
+  #     - MONGO_HOST=mongodb
+  #     - MONGO_PORT=27017
+  #     - MINIO_HOST=nginx
+  #     - MINIO_PORT=9000
+  #   #   NODE_RED_CREDENTIAL_SECRET: ${NODE_RED_CREDENTIAL_SECRET}
+  #   volumes:
+  #     - ../:/data
+  #     # - ./docker_node_modules:/data/node_modules
+  #   restart: unless-stopped
   node-red-dev:
-    image: nodered/node-red
+    image: node:18-alpine
     
     hostname: node-red-dev
     env_file:
       - ../config/prod.env
+    working_dir: /data
     ports:
-      - "1890:1880"
+      - "8000:8000"
     entrypoint: >
       sh -c "
-      npm install --prefix /data --unsafe-perm --no-update-notifier --no-fund --only=production
-      && npm --no-update-notifier --no-fund start --cache /data/.npm -- --userDir /data"
+      npm install --prefix /data --unsafe-perm --no-update-notifier
+      && npm i -g nodemon
+      && nodemon index.js"
     environment:
       - MONGO_HOST=mongodb
       - MONGO_PORT=27017

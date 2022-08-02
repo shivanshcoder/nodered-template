@@ -13,7 +13,7 @@ var app = express();
 
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
-const swaggerDocument = YAML.load('./api/swagger/swagger.yaml');
+const swaggerDocument = YAML.load('./swagger.yaml');
  
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -61,7 +61,6 @@ Promise.all(Bootstrap.intializeServices()).then(() => {
 }).catch((error) => {
     console.error(error);
 });
-
 
 // Start the runtime
 RED.start();
