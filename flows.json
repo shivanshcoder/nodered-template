@@ -8,6 +8,28 @@
         "env": []
     },
     {
+        "id": "37e7ceb6f79f5241",
+        "type": "Kafka Broker",
+        "name": "",
+        "hosts": [
+            {
+                "host": "broker",
+                "port": 9092
+            }
+        ],
+        "hostsEnvVar": "",
+        "connectTimeout": "10000",
+        "requestTimeout": "30000",
+        "autoConnect": "true",
+        "idleConnection": "5",
+        "reconnectOnIdle": "true",
+        "maxAsyncRequests": "10",
+        "checkInterval": "10",
+        "selfSign": true,
+        "usetls": false,
+        "useCredentials": false
+    },
+    {
         "id": "66250be5bfc6d27b",
         "type": "inject",
         "z": "e34226b2e39fb0a2",
@@ -32,7 +54,7 @@
         "y": 140,
         "wires": [
             [
-                "1437ae6d78da08eb"
+                "b98023de175dd29d"
             ]
         ]
     },
@@ -48,8 +70,61 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 670,
-        "y": 180,
+        "x": 530,
+        "y": 200,
         "wires": []
+    },
+    {
+        "id": "b98023de175dd29d",
+        "type": "Kafka Producer",
+        "z": "e34226b2e39fb0a2",
+        "name": "",
+        "broker": "37e7ceb6f79f5241",
+        "topic": "quickstart",
+        "topicSlash2dot": false,
+        "requireAcks": 1,
+        "ackTimeoutMs": 100,
+        "partitionerType": 0,
+        "key": "",
+        "partition": 0,
+        "attributes": 0,
+        "connectionType": "Producer",
+        "convertFromJson": false,
+        "x": 540,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "118d227bb2161967",
+        "type": "Kafka Consumer",
+        "z": "e34226b2e39fb0a2",
+        "name": "",
+        "broker": "37e7ceb6f79f5241",
+        "regex": false,
+        "topics": [
+            {
+                "topic": "quickstart",
+                "offset": 0,
+                "partition": 0
+            }
+        ],
+        "groupId": "kafka-node-group",
+        "autoCommit": "true",
+        "autoCommitIntervalMs": 5000,
+        "fetchMaxWaitMs": 100,
+        "fetchMinBytes": 1,
+        "fetchMaxBytes": 1048576,
+        "fromOffset": 0,
+        "encoding": "utf8",
+        "keyEncoding": "utf8",
+        "connectionType": "Consumer",
+        "convertToJson": false,
+        "x": 320,
+        "y": 200,
+        "wires": [
+            [
+                "1437ae6d78da08eb"
+            ]
+        ]
     }
 ]
