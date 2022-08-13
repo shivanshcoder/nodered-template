@@ -1,35 +1,12 @@
 version: "3.9"
 
 services:
-
-  # node-red-dev:
-  #   image: nodered/node-red
-    
-  #   hostname: node-red-dev
-  #   env_file:
-  #     - ../config/prod.env
-  #   ports:
-  #     - "1890:1880"
-  #   entrypoint: >
-  #     sh -c "
-  #     npm install --prefix /data --unsafe-perm --no-update-notifier --no-fund --only=production
-  #     && npm --no-update-notifier --no-fund start --cache /data/.npm -- --userDir /data"
-  #   environment:
-  #     - MONGO_HOST=mongodb
-  #     - MONGO_PORT=27017
-  #     - MINIO_HOST=nginx
-  #     - MINIO_PORT=9000
-  #   #   NODE_RED_CREDENTIAL_SECRET: ${NODE_RED_CREDENTIAL_SECRET}
-  #   volumes:
-  #     - ../:/data
-  #     # - ./docker_node_modules:/data/node_modules
-  #   restart: unless-stopped
   node-red-dev:
     image: node:18-alpine
     
     hostname: node-red-dev
     env_file:
-      - ../config/prod.env
+      - ./.env
     working_dir: /data
     ports:
       - "8000:8000"
@@ -38,27 +15,23 @@ services:
       npm install --prefix /data --unsafe-perm --no-update-notifier
       && npm i -g nodemon
       && nodemon index.js"
-    environment:
-      - MONGO_HOST=mongodb
-      - MONGO_PORT=27017
-      - MINIO_HOST=nginx
-      - MINIO_PORT=9000
-    #   NODE_RED_CREDENTIAL_SECRET: ${NODE_RED_CREDENTIAL_SECRET}
+
     volumes:
-      - ../:/data
+      - ./:/data
       # - ./docker_node_modules:/data/node_modules
     restart: unless-stopped
-
 
   mongodb:
     image: mongo
     hostname: mongodb
     volumes:
-      - ../data/debug/mongodb:/data/db
-    environment:
-      # provide your credentials here
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=rootPass
+      - ../data/mongodb:/data/db
+    env_file:
+      - ./.env
+    # environment:
+    #   # provide your credentials here
+    #   - MONGO_INITDB_ROOT_USERNAME=root
+    #   - MONGO_INITDB_ROOT_PASSWORD=rootPass
     ports:
       - "27027:27017"
 
@@ -66,14 +39,13 @@ services:
     image: quay.io/minio/minio
     hostname: minio
     command: server /data --console-address ":9001"
+    env_file:
+      - ./.env
     volumes:
-      - ../data/debug/minio:/data
+      - ../data/minio:/data
     ports:
       - "9010:9000"
       - "9011:9001"
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1

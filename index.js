@@ -1,8 +1,7 @@
 var http = require('http');
 var express = require("express");
 var RED = require("node-red");
-const Bootstrap = require('./Bootstrap/bootstrap.js');
-const mongodb = require("mongodb")
+const Bootstrap = require('./app/Bootstrap/bootstrap.js');
 
 // Fetching Nodered settings from file now
 var settings = require('./settings')
@@ -24,8 +23,7 @@ app.use("/",express.static("public"));
 app.use(express.json({limit: "20mb"}));
 app.use(express.urlencoded({ extended: false }));
 
-app.get('/hi', (req, res) => {
-    
+app.get('/', (req, res) => {
     res.send('hi');
 })
 
@@ -33,26 +31,20 @@ app.get('/hi', (req, res) => {
 // Create a server
 var server = http.createServer(app);
 
-// Create the settings object - see default settings.js file for other options
-// var settings = {
-//     httpAdminRoot:"/red",
-//     httpNodeRoot: "/api",
-//     userDir:"./",
-//     flowFile:"flows.json",
-//     credentialSecret: "nskjdvfhbkjshdfvhbsdfvlauetowiryeughdf",
-//     functionGlobalContext: {}    // enables global context
-// };
-
 
 
 // Initialise the runtime with a server and settings
 RED.init(server,settings);
 
 // Serve the editor UI from /red
-app.use(settings.httpAdminRoot, RED.httpAdmin);
+if(settings.httpAdminRoot){
+    app.use(settings.httpAdminRoot, RED.httpAdmin);
+}
 
 // // Serve the http nodes UI from /api
-app.use(settings.httpNodeRoot,RED.httpNode);
+if(settings.httpNodeRoot){
+    app.use(settings.httpNodeRoot,RED.httpNode);
+}
 
 Promise.all(Bootstrap.intializeServices()).then(() => {
     server.listen(8000, () => {
