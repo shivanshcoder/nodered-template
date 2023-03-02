@@ -9,82 +9,87 @@ services:
       - ./.env
     working_dir: /data
     ports:
-      - "8000:8000"
+      - "1880:8000"
     entrypoint: >
       sh -c "
       npm install --prefix /data --unsafe-perm --no-update-notifier
-      && npm i -g nodemon
-      && nodemon index.js"
+      && node index.js"
 
     volumes:
       - ./:/data
       # - ./docker_node_modules:/data/node_modules
     restart: unless-stopped
+    networks:
+      - development
+      
+networks:
+  development:
+    external:
+      name: development
+  # mongodb:
+  #   image: mongo
+  #   hostname: mongodb
+  #   volumes:
+  #     - ../data/mongodb:/data/db
+  #   env_file:
+  #     - ./.env
+  #   # environment:
+  #   #   # provide your credentials here
+  #   #   - MONGO_INITDB_ROOT_USERNAME=root
+  #   #   - MONGO_INITDB_ROOT_PASSWORD=rootPass
+  #   ports:
+  #     - "27027:27017"
 
-  mongodb:
-    image: mongo
-    hostname: mongodb
-    volumes:
-      - ../data/mongodb:/data/db
-    env_file:
-      - ./.env
-    # environment:
-    #   # provide your credentials here
-    #   - MONGO_INITDB_ROOT_USERNAME=root
-    #   - MONGO_INITDB_ROOT_PASSWORD=rootPass
-    ports:
-      - "27027:27017"
+  # minio:
+  #   image: quay.io/minio/minio
+  #   hostname: minio
+  #   command: server /data --console-address ":9001"
+  #   env_file:
+  #     - ./.env
+  #   volumes:
+  #     - ../data/minio:/data
+  #   ports:
+  #     - "9010:9000"
+  #     - "9011:9001"
 
-  minio:
-    image: quay.io/minio/minio
-    hostname: minio
-    command: server /data --console-address ":9001"
-    env_file:
-      - ./.env
-    volumes:
-      - ../data/minio:/data
-    ports:
-      - "9010:9000"
-      - "9011:9001"
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:7.0.1
+  #   container_name: zookeeper
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.0.1
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-
-  broker:
-    image: confluentinc/cp-kafka:7.0.1
-    container_name: broker
-    ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
-      - "19092:19092"
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_INTERNAL://broker:29092,CONNECTIONS_FROM_HOST://localhost:19092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1    
+  # broker:
+  #   image: confluentinc/cp-kafka:7.0.1
+  #   container_name: broker
+  #   ports:
+  #   # To learn about configuring Kafka for access across networks see
+  #   # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+  #     - "19092:19092"
+  #   depends_on:
+  #     - zookeeper
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_INTERNAL://broker:29092,CONNECTIONS_FROM_HOST://localhost:19092
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #     KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+  #     KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1    
 
 
-  createbuckets:
-    image: minio/mc
-    depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
-      /usr/bin/mc mb myminio/pubtesting;
-      /usr/bin/mc policy set public myminio/pubtesting;
-      /usr/bin/mc mb myminio/privtesting;
-      /usr/bin/mc mb myminio/logs;
-      /usr/bin/mc mb myminio/profiles;
-      /usr/bin/mc mb myminio/configuration;
-      exit 0;
-      "
+  # createbuckets:
+  #   image: minio/mc
+  #   depends_on:
+  #     - minio
+  #   entrypoint: >
+  #     /bin/sh -c "
+  #     /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
+  #     /usr/bin/mc mb myminio/pubtesting;
+  #     /usr/bin/mc policy set public myminio/pubtesting;
+  #     /usr/bin/mc mb myminio/privtesting;
+  #     /usr/bin/mc mb myminio/logs;
+  #     /usr/bin/mc mb myminio/profiles;
+  #     /usr/bin/mc mb myminio/configuration;
+  #     exit 0;
+  #     "

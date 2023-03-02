@@ -417,6 +417,7 @@ module.exports = {
      *    global.get("os")
      */
     functionGlobalContext: {
+        express_mongodb: require('./app/Initializers/Mongo')
         // os:require('os'),
     },
 
